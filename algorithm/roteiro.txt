@@ -1,0 +1,9 @@
+roteiro de criação do algoritmo
+
+1 - identificar o numero de elementos dentro de cada critério
+ i - se o numero de elementos for menor ou igual a 7 então a pontuação do critério é 7;
+ ii - se for maior então a pontuação do critério será o numero máximo de elementos.
+2 - atribuição de grau de importancia pra cada critério
+3 - pode haver dois critérios com mesmo grau de importancia
+ i - para critérios qualitativos pode-se aplicar pesos diretor (usuário) ou automaticos (quantidades) por exemplo
+4 - as alternativas de cada critério representam dj que formam uma matriz

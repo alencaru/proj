@@ -1,0 +1,119 @@
+id,criterium
+1,...1
+2,Marca
+3,Modelo Base
+4,Versão
+5,Ano
+6,Combustível
+7,Propulsão
+8,Configuração
+9,Garantia
+10,Lugares
+11,Portas
+12,Porte
+13,Procedência
+14,Valor FIPE
+15,Alimentação
+16,Aspiração
+17,Cilindrada
+18,Cilindros
+19,Comando de Válvulas
+20,Curso do Pistão
+21,Diâmetro do Cilindro
+22,Disposição
+23,Instalação
+24,Peso-Potência
+25,Peso-Torque
+26,Potência Específica
+27,Potência Máxima
+28,Razão de Compressão
+29,Torque Específico
+30,Torque Máximo
+31,Válvulas por Cilindro
+32,Variação do Comando
+33,Aceleração 0-100 km/h
+34,Velocidade Máxima
+35,Consumo Rodoviário (Gasolina)
+36,Consumo Urbano (Gasolina)
+37,Autonomia Rodoviária (Gasolina)
+38,Autonomia Urbana (Gasolina)
+39,Acoplamento
+40,Câmbio
+41,Quantidade de Marchas
+42,Tração
+43,Altura do Flanco
+44,Pneus Dianteiros
+45,Pneus Traseiros
+46,Freios Dianteiros
+47,Freios Traseiros
+48,Suspensão Dianteira
+49,Elemento Elástico da Suspensão
+50,Suspensão Traseira
+51,Assistência de Direção
+52,Diâmetro Mínimo de Giro
+53,Altura
+54,Bitola Dianteira
+55,Bitola Traseira
+56,Comprimento
+57,Distância entre Eixos
+58,Largura
+59,Peso
+60,Porta-Malas
+61,Tanque de Combustível
+62,Área Frontal
+63,Área Frontal Corrigida
+64,Coeficiente de Arrasto
+65,url
+66,id
+67,Plataforma
+68,Rotação de Potência Máxima
+69,Rotação de Torque Máximo
+70,Código do Câmbio
+71,Diâmetro de Giro
+72,Vão Livre do Solo
+73,Carga Útil
+74,Acionamento do Comando
+75,Observações
+76,Consumo Rodoviário (Diesel)
+77,Consumo Urbano (Diesel)
+78,Autonomia Rodoviária (Diesel)
+79,Autonomia Urbana (Diesel)
+80,Código do Motor
+81,Rotação Máxima
+82,Ângulo Central
+83,Ângulo de Entrada
+84,Ângulo de Saída
+85,Reboque com Freio
+86,Reboque sem Freio
+87,Geração
+88,Série
+89,Cilindrada unitária
+90,Tuchos
+91,Pneu Estepe
+92,Altura mínima do solo
+93,Autonomia
+94,Capacidade de Bateria
+95,Consumo Elétrico
+96,Potência
+97,Potência Combinada
+98,Torque
+99,Torque Combinado
+100,Autonomia Elétrica
+101,Velocidade Máxima (Modo Elétrico)
+102,Consumo Rodoviário
+103,Consumo Urbano
+104,Autonomia Rodoviária
+105,Autonomia Urbana
+106,Porta-Malas (5 Lugares)
+107,Porta-Malas (7 Lugares)
+108,Consumo Rodoviário (Álcool)
+109,Consumo Urbano (Álcool)
+110,Autonomia Rodoviária (Álcool)
+111,Autonomia Urbana (Álcool)
+112,Frenagem 0-100 km/h
+113,Rampa Máxima
+114,Travessia de Água
+115,Potência de recarga
+116,Porta-Malas (6 Lugares)
+117,Inclinação Lateral Máxima
+118,Viscosidade do óleo
