@@ -10,13 +10,6 @@ import pandas as pd
 
 tab = pl.read_csv("./scrap/tabela_carros2.csv")
 
-tab.select("Garantia:").group_by("Garantia:").count()
-
-tab.with_columns(
-    pl.col("Garantia:").str.extract_all(r"^\d+").list.join("")
-).with_columns(
-    garantia_em_anos=pl.col("Garantia:").str.to_integer(base=16, strict=False)
-)
 
 """
 ###
@@ -40,3 +33,27 @@ tab.with_columns(
 
 # PASSO 5
 """
+
+#------------------------------------------------------------------------
+# filtrar os criterios e adicionar os graus de importancia
+tb_criterios = pl.read_csv('tab_criterios.csv')
+tb_conforto = pl.read_csv('tb_conforto_numeric.csv')
+tb_seguranca = pl.read_csv('tb_seguranca_numeric.csv')
+
+lista_criterios = tb_criterios.filter(
+    pl.col('criterios').is_in([
+        'valor_fipe', 
+        'consumo_urbano_gasolina_km/l',
+        'consumo_rodoviario_gasolina_km/l',
+        'autonomia_rodoviaria_gasolina_km',
+        'porta_malas_litros',
+        'velocidade_maxima_km/h',
+        'peso_potencia_kg/cv',
+        'distancia_entre_eixos_mm',
+        'altura_mm',
+        'consumo_rodoviario_alcool_km/l',
+        'consumo_urbano_alcool_km/l'
+    ]) 
+).with_columns(
+    
+)

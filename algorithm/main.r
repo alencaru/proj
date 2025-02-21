@@ -16,7 +16,7 @@ tb_car <- read_csv('./scrap/tabela_carros2.csv')
 list_symbles <- c(
   ' graus',' mm', ' rpm', ' cv', ' cv/litro', ' kg/cv', ' kg/kgfm', ' kgfm/litro', 
   ' kg',' km/l', ' km/h', ' km', '(?<=\\s)s$', ' cm³', ' litros', '(?<=\\s)m$',
-  ' m²$'
+  ' m²$', ' kWh'
 )
 
 #---------------------------------------------------------------------------------------------------------
@@ -35,17 +35,18 @@ list_cbind()
 
 # limpando resíduos e recriando o ID
 df |>
-  rename("ID"=`...99`) |>
+  rename("ID"=`...102`) |>
   select(-starts_with("...")) -> df
 
 # salvando em arquivo em formato CSV
-write_csv(df, 'tab_car_numeric_2.csv')
+write_csv(df, 'tab_car_numeric_3.csv')
 
 #-------------------------------------------------------------------------------------------------------
 # testando o identificador de colunas
 
-identifica_colunas(tb_car, '(?<=\\s)m$')
+identifica_colunas(tb_car, ' kWh')
 
+# aplicanco a função de correcao das colunas
 tab_not_cleaned <- map(list_symbles, function(x){
 
   a <- identifica_colunas(tb_car, x)
@@ -58,7 +59,7 @@ tab_not_cleaned <- map(list_symbles, function(x){
 # selecionando as colunas para retirar da planilha principal
 tab_not_cleaned |> str_remove_all('...[0-9][0-9]$') |> unique() -> columns_to_filter
 
-tb_car |> as_data_frame() |> select(-columns_to_filter) -> tb_restante
+tb_car |> as_tibble() |> select(-columns_to_filter) -> tb_restante
 
 # Limpando colunas categoricas, de data e valor
 tb_restante |>
@@ -87,7 +88,19 @@ tb_restante |>
     geracao = as.numeric(`Geração:`)
   ) -> tb_restante
 
-write_csv(tabela_restante, 'tabela_carros_quali.csv')
+tb_restante |>
+  mutate(
+    valor_fipe = str_replace(valor_fipe, '\\.', ''),
+    valor_fipe = as.numeric(valor_fipe)
+  ) |>
+  
+tb_restante |>  
+  mutate(
+    coeficiente_de_arrasto = str_replace(`Coeficiente de Arrasto:`, ',', '.'),
+    coeficiente_de_arrasto = as.numeric(coeficiente_de_arrasto)
+  ) -> tb_restante
+  
+write_csv(tb_restante, 'tabela_carros_quali.csv')
 
 # corrigindo a coluna de torque maximo
 # separando em 3 colunas: torque gasolina, alcool e rpm
@@ -144,5 +157,5 @@ tab_torque_maximo <- bind_rows(tb_torque_corrigido_1, tb_torque_corrigido_2)
 write_csv(tab_torque_maximo, 'tabela_torque_maximo.csv')
 #------------------------------------------------------------------------------------------------
 
-tb <- read_csv('db_detalhes.csv')
-tb_car <- read_csv('tabela_carros')
+#tb <- read_csv('db_detalhes.csv')
+#tb_car <- read_csv('tabela_carros')

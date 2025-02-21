@@ -1,0 +1,1 @@
+tabela de criterios com coluna de multiplicadore -1 para monotonicos de custo

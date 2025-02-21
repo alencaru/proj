@@ -109,3 +109,57 @@ cbind(tb_car[,1])
 
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------
+# criando a db_detalhes numerica
+
+library(arrow)
+
+db_detalhes <- read_parquet('db_detalhes.parquet')
+
+db_detalhes |>
+  group_by(ID) |>
+  summarise(
+    conforto = paste0(unique(conforto), collapse = ', '),
+    conforto_n = str_count(conforto, ',') + 1
+  ) -> tb_conforto
+
+
+db_detalhes |>
+  group_by(ID) |>
+  summarise(
+    seguranca = paste0(unique(seguranca), collapse = ' ,'),
+    seguranca_n = str_count(seguranca, ',') + 1
+  ) -> tb_seguranca
+
+
+db_detalhes |>
+  group_by(ID) |>
+  summarise(
+    infoteinimento = paste0(unique(infoteinimento), collapse = ' ,'),
+    infoteinimento_n = str_count(infoteinimento) + 1
+  ) -> tb_infoteinimento
+
+
+# salvando os arquivos
+write_csv(tb_conforto, 'tb_conforto_numeric.csv')
+write_csv(tb_seguranca, 'tb_seguranca_numeric.csv')
+write_csv(tb_infoteinimento, 'tb_infoteinimento_numeric.csv')
+
+#---------------------------------------------------------------------
+# criando a tabela de valores monotonicos de custo
+
+tb_numeric <- read_csv('tab_car_numeric_3.csv')
+colnames(tb_restante)
+
+tb_criterios_numeric <- tibble(
+  criterios = colnames(tb_numeric),
+  multiplier = if_else(
+    criterios %in% c(
+      'peso_potencia_kg/cv','peso_torque_kg','peso_kg','consumo_rodoviario_km/l', "consumo_rodoviario_gasolina_km/l","consumo_urbano_gasolina_km/l",
+      "consumo_rodoviario_diesel_km/l","consumo_urbano_diesel_km/l","consumo_rodoviario_km/l","consumo_urbano_km/l","consumo_rodoviario_alcool_km/l",
+      "consumo_urbano_alcool_km/l", "consumo_rodoviario_diesel_km", "consumo_urbano_diesel_km","consumo_rodoviario_alcool_km","consumo_urbano_alcool_km",
+      'aceleracao_0_100_km_h_s','frenagem_0_100_km_h_m','consumo_eletrico_kWh','valor_fipe', 'coeficiente_de_arrasto'
+    ), -1, 1
+   )
+)
+
+write_csv(tb_criterios_numeric, 'tab_criterios.csv')
