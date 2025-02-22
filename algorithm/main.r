@@ -159,3 +159,58 @@ write_csv(tab_torque_maximo, 'tabela_torque_maximo.csv')
 
 #tb <- read_csv('db_detalhes.csv')
 #tb_car <- read_csv('tabela_carros')
+
+criterios <- read_csv('tab_criterios2.csv')
+
+criterios |>
+  bind_rows(
+    data.frame(
+        criterios = c('valor_fipe','conforto','seguranca','infoteinimento'),
+        multiplier = c(-1,1,1,1)
+    )
+  ) |>
+  filter(criterios %in%
+    c(
+    'valor_fipe', 
+    'consumo_urbano_gasolina_km/l',
+    'consumo_rodoviario_gasolina_km/l',
+    'autonomia_rodoviaria_gasolina_km',
+    'porta_malas_litros',
+    'velocidade_maxima_km/h',
+    'peso_potencia_kg/cv',
+    'distancia_entre_eixos_mm',
+    'altura_mm',
+    'consumo_rodoviario_alcool_km/l',
+    'consumo_urbano_alcool_km/l',
+    'conforto',
+    'seguranca',
+    'infoteinimento'
+  )
+) -> conj_criterios
+
+#------------------------------------------------------------------------------------------------
+# ordenando os criterios
+
+conj_criterios |>
+  arrange() |>
+  mutate(
+    grau_de_importancia = case_when(
+      criterios == 'valor_fipe' ~ 16,
+      criterios == 'consumo_urbano_gasolina_km/l' ~ 15,
+      criterios == 'consumo_rodoviario_gasolina_km/l' ~ 15,
+      criterios == 'consumo_urbano_alcool_km/l' ~ 14,
+      criterios == 'consumo_rodoviario_alcool_km/l' ~ 14,
+      criterios == 'seguranca' ~ 16,
+      criterios == 'conforto' ~ 13,
+      criterios == 'infoteinimento' ~ 12,
+      criterios == 'distancia_entre_eixos_mm' ~ 11,
+      criterios == 'porta_malas_litros' ~ 10,
+      criterios == 'velocidade_maxima_km/h' ~ 9,
+      criterios == 'peso_potencia_kg/cv' ~ 8,
+      criterios == 'autonomia_rodoviaria_gasolina_km' ~ 7,
+      criterios == 'altura_mm' ~ 6,
+      TRUE ~ 5
+    )
+  ) -> conj_criterios
+
+#-------------------------------------------------------------------------------------------------

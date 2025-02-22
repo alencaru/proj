@@ -1,0 +1,13 @@
+criterios,multiplier
+altura_mm,1
+distancia_entre_eixos_mm,1
+peso_potencia_kg/cv,-1
+consumo_rodoviario_gasolina_km/l,-1
+consumo_urbano_gasolina_km/l,-1
+consumo_rodoviario_alcool_km/l,-1
+consumo_urbano_alcool_km/l,-1
+velocidade_maxima_km/h,1
+autonomia_rodoviaria_gasolina_km,1
+porta_malas_litros,1
+seguranca,1
+conforto,1

@@ -148,7 +148,7 @@ write_csv(tb_infoteinimento, 'tb_infoteinimento_numeric.csv')
 # criando a tabela de valores monotonicos de custo
 
 tb_numeric <- read_csv('tab_car_numeric_3.csv')
-colnames(tb_restante)
+#colnames(tb_restante)
 
 tb_criterios_numeric <- tibble(
   criterios = colnames(tb_numeric),
@@ -160,6 +160,46 @@ tb_criterios_numeric <- tibble(
       'aceleracao_0_100_km_h_s','frenagem_0_100_km_h_m','consumo_eletrico_kWh','valor_fipe', 'coeficiente_de_arrasto'
     ), -1, 1
    )
-)
+  ) |>
+  bind_rows(
+    data.frame(
+      criterios = c('seguranca', 'conforto','infotainimento'),
+      multiplier = c(1,1,1)
+    )
+  ) |>
+  filter(criterios != 'ID')
 
-write_csv(tb_criterios_numeric, 'tab_criterios.csv')
+write_csv(tb_criterios_numeric, 'tab_criterios2.csv')
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------
+# limpando as colunas repetidas na tabela numeric
+
+tb_numeric |>
+  select(-c(
+      "consumo_rodoviario_diesel_km", "consumo_urbano_diesel_km","consumo_rodoviario_alcool_km","consumo_urbano_alcool_km"     
+  )) |>
+  clean_names() -> t
+
+
+quali <- read_csv('tabela_carros_quali.csv')
+
+quali |> 
+  select(`...1`, garantia_em_anos, valor_fipe, valvulas_por_cilindro, quantidade_de_marchas, geracao, coeficiente_de_arrasto) |>
+  rename('ID' = `...1`) |>
+  right_join(
+    tb_numeric
+  ) -> tb_numeric4
+
+write_csv(tb_numeric4, 'tab_car_numeric_4.csv')
+
+quali |>
+  select(
+    !c(garantia_em_anos, valor_fipe, valvulas_por_cilindro, quantidade_de_marchas, geracao, coeficiente_de_arrasto)
+  ) |>
+  rename(
+    "ID" = `...1`
+  )-> tb_carros_quali
+
+write_csv(tb_carros_quali, 'tabela_carros_quali_2.csv')

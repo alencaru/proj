@@ -8,7 +8,7 @@ library(stringr)
 
 identifica_colunas <- function(data, symble_txt) {
   data |>
-    select(where(~ any(str_detect(.x, symble_txt), na.rm = TRUE)), "...1") |>
+    select(where(~ any(str_detect(.x, symble_txt), na.rm = TRUE)) , "...1") |>
     mutate(across(where(is.character), ~ str_replace_all(.x, ",", "."))) -> tb
 
   return(tb)

@@ -36,9 +36,12 @@ tab = pl.read_csv("./scrap/tabela_carros2.csv")
 
 #------------------------------------------------------------------------
 # filtrar os criterios e adicionar os graus de importancia
-tb_criterios = pl.read_csv('tab_criterios.csv')
+tb_criterios = pl.read_csv('tab_criterios2.csv')
 tb_conforto = pl.read_csv('tb_conforto_numeric.csv')
 tb_seguranca = pl.read_csv('tb_seguranca_numeric.csv')
+tb_infotein = pl.read_csv('tb_infoteinimento_numeric.csv')
+tb_quali = pl.read_csv('tabela_carros_quali_2.csv')
+
 
 lista_criterios = tb_criterios.filter(
     pl.col('criterios').is_in([
@@ -52,8 +55,11 @@ lista_criterios = tb_criterios.filter(
         'distancia_entre_eixos_mm',
         'altura_mm',
         'consumo_rodoviario_alcool_km/l',
-        'consumo_urbano_alcool_km/l'
-    ]) 
-).with_columns(
-    
-)
+        'consumo_urbano_alcool_km/l',
+        'conforto',
+        'seguranca',
+        'infoteinimento'
+    ]))
+
+
+lista_criterios.lazy().sink_csv('conjunto_criterios.csv')
