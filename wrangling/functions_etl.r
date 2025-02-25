@@ -61,3 +61,38 @@ take_symble_to_column <- function(data, symble_txt) {
 
 # test
 # take_symble_to_column(tb_car, '(?<=\\s)s$') |> head() -> t
+
+#-----------------------------------------------------------------------------------------------------
+
+function_normalization <- function(x){
+
+  a <- scale(x)[,1]
+  
+  b <- map(a, function(w){ if(w < 0){ pnorm(w, T) } else { pnorm(w, F) } })
+
+  return(b)
+
+}
+
+#-----------------------------------------------------------------------------------------------------
+# funcao para atribuir pontuacao as colunas de multilinhas qualitativas
+
+
+funcao_atribuir_valor <- function(data, coluna, filtro, separador){
+
+  data |>
+    separate_rows(coluna, sep = separador) |>
+    group_by(ID) |>
+    nest(coluna = coluna) |>
+    slice(1:100) |>
+    mutate(coluna = map(coluna, ~pull(.x, 1))) |>
+    mutate( 
+      exists = map(coluna, ~ .x %in% filtro),
+      value = map_int(exists, ~sum(.x))
+    ) -> t
+    
+    return(t)
+
+}
+
+#------------------------------------------------------------------------------------------------------
