@@ -97,6 +97,24 @@ tab_conforto <- read.csv('tb_conforto_numeric.csv')
 tab_seguranca <- read.csv('tb_seguranca_numeric.csv')
 tb_info <- read.csv('tb_infoteinimento_numeric.csv')
 
+
+# selecionando as opcoes de conforto, seguranca e infoteinimento
+
+filtro_conf <- c('Ar-condicionado automático','Ajuste elétrico dos retrovisores', 'Câmbio automático','Retrovisores rebativeis eletricamente',
+'Controle de velocidade adaptativo',"Bancos revestidos em couro")
+
+filtro_seg <- c( "Airbags de cortina", "Airbags frontais", "Airbags laterais", "Câmera traseira para manobras",
+"Assistente de partida em rampa", "Controle de estabilidade", "Freios ABS" ,"Alerta de ponto cego", "Freios ABS"
+)
+
+filtro_info <- c("Computador de bordo" ,"Conexão USB","Espelhamento da tela do celular" )
+
+# aplicando a funcao de pontuacao para as tabelas 
+
+tab_conf <- funcao_atribuir_valor(tab_conforto, 'conforto', filtro_conf, ', ') |> select(ID, value) |> clean_names() |> rename('conforto_n' = value)
+tab_seg <- funcao_atribuir_valor(tab_seguranca, 'seguranca', filtro_seg, "' ,") |> select(ID, value) |> clean_names() |> rename('seguranca_n' = value)
+tab_info <- funcao_atribuir_valor(tb_info, 'infoteinimento', filtro_info, ' ,') |> select(ID, value) |> clean_names() |> rename('infoteinimento_n' = value)
+
 #-------------------------------------------------------------------------------------------------
 
 tab_geral <- tab_quali |>
@@ -105,15 +123,9 @@ tab_geral <- tab_quali |>
   left_join(
     (tab_numeric |> select(any_of(conj_criterios$criterios), id))
   ) |>
-  left_join(
-    tb_info |> select(ID, infoteinimento_n) |> clean_names()
-  ) |>
-  left_join(
-    tab_seguranca |> select(ID, seguranca_n) |> clean_names()
-  ) |>
-  left_join(
-    tab_conforto |> select(ID, conforto_n) |> clean_names()
-  )
+  left_join(tab_info) |>
+  left_join(tab_seg) |>
+  left_join(tab_conf)
 
 #--------------------------------------------------------------------------------------------------
 # aplicando funcao de normalizacao na tabela
@@ -125,6 +137,8 @@ tab_geral |>
     seguranca_n = if_else(is.na(seguranca_n), 0, seguranca_n),
     conforto_n = if_else(is.na(conforto_n), 0, conforto_n)
   ) |>
+  filter(!is.na(consumo_urbano_gasolina_km_l)) |>
+  filter(valor_fipe <= 500000) |>    # filtro de valor (menor que 500 mil reais)
   mutate(
     across(starts_with('consumo') & where(is.numeric), ~replace_na(.x, mean(.x, na.rm = TRUE)))
   ) -> tab_geral
@@ -165,6 +179,9 @@ tab_geral |>
     final_rank = sum(c_across(where(is.numeric) & !id))
   ) |> 
   arrange(desc(final_rank)) |> slice(1:10) -> tab_geral_w
+
+write_csv(tab_geral_w, 'tabela_geral_weight.csv')
+
   # left_join(
   #   tab_geral |> select(id, marca, modelo_base), by = 'id'
   # ) |>
@@ -175,4 +192,15 @@ tab_geral |>
 
 nids <- tab_geral_w$id
 
-tab_quali |> inner_join(tab_geral_w |> select(id, final_rank), by = c('ID' = 'id')) |> arrange(desc(final_rank))
+tab_quali |> 
+  inner_join(
+    tab_geral_w |> 
+    select(id, final_rank), by = c('ID' = 'id')
+  ) |> 
+  arrange(desc(final_rank)) |>
+  slice(1:10) |>
+  select(ID, Marca., Modelo.Base., Valor.FIPE., Ano., final_rank) -> final_rank_table
+
+write_csv(final_rank_table, 'tabela_final_rank.csv')
+
+#----------------------------------------------------------------------------------------------

@@ -59,7 +59,7 @@ tab_not_cleaned <- map(list_symbles, function(x){
 # selecionando as colunas para retirar da planilha principal
 tab_not_cleaned |> str_remove_all('...[0-9][0-9]$') |> unique() -> columns_to_filter
 
-tb_car |> as_tibble() |> select(-columns_to_filter) -> tb_restante
+tb_car |> as_tibble() |> select(-any_of(columns_to_filter)) -> tb_restante
 
 # Limpando colunas categoricas, de data e valor
 tb_restante |>
@@ -71,7 +71,7 @@ tb_restante |>
   separate(
     valor_fipe, 
     into = c('valor_fipe', 'valor_data'), sep = ' ', remove = TRUE
-  ) |>
+  ) |> 
   mutate(
     `garantia_em_anos` = str_extract(`Garantia:`, '\\d+'),
     `garantia_em_anos` = as.integer(`garantia_em_anos`)
@@ -90,10 +90,10 @@ tb_restante |>
 
 tb_restante |>
   mutate(
-    valor_fipe = str_replace(valor_fipe, '\\.', ''),
+    valor_fipe = str_replace_all(valor_fipe, '\\.', ''),
     valor_fipe = as.numeric(valor_fipe)
-  ) |>
-  
+  ) -> tb_restante
+ 
 tb_restante |>  
   mutate(
     coeficiente_de_arrasto = str_replace(`Coeficiente de Arrasto:`, ',', '.'),
